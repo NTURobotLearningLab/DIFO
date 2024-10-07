@@ -542,14 +542,15 @@
                 <div class="content has-text-justified">
                         <h2 class="title is-3">Ablation study</h2>
                 </div>
-                <div class="columns is-centered">
+                <div class="is-centered">
         <!-- Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\) -->
-                    <div class="column">
+                    <div class="columns is-centered">
+                    <div class="column is-full-width">
                         <div class="content has-text-justified">
                             <h2 class="title is-5">\(\lambda_{MSE}\) and \(\lambda_{BCE}\)</h2>
                         </div>
                         <div class="content has-text-centered">
-                            <img src="./static/images/experiment/mse_ratio.png" alt="Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\)" width="90%">
+                            <img src="./static/images/experiment/mse_ratio.png" alt="Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\)" width="45%">
                         </div>
                         <div class="content has-text-justified">
                             <p>
@@ -557,20 +558,23 @@
                             </p>
                         </div>
                     </div>
+                    </div>
             <!--/ Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\). -->
             <!-- Ablation study on the number of samples for reward computation -->
-                    <div class="column">
+                    <div class="is-centered">
+                    <div class="column is-full-width">
                         <div class="content has-text-justified">
                             <h2 class="title is-5">Number of samples for reward computation</h2>
                         </div>
                         <div class="content has-text-centered">
-                            <img src="./static/images/experiment/sample.png" alt="Ablation study on the number of samples for reward computation" width="90%">
+                            <img src="./static/images/experiment/sample.png" alt="Ablation study on the number of samples for reward computation" width="45%">
                         </div>
                         <div class="content has-text-justified">
                             <p>
                                 To investigate the robustness of our rewards, we conducted experiments with varying numbers of denoising step samples in <strong><span class="smallcaps">PointMaze</span></strong> and <strong><span class="smallcaps">Walker</span></strong>. We take the mean of losses computed from different numbers of samples, i.e., multiple t, to compute rewards. As presented in the Figure above, the performance of DIFO is stable under different numbers of samples. As a result, we use a single denoising step sample to compute the reward for the best efficiency.
                             </p>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
