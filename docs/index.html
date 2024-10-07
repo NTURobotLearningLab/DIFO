@@ -150,7 +150,7 @@
                                         </a>
                                     </span>
                                     <!-- Video Link. -->
-                                    <span class="link-block">
+                                    <!-- <span class="link-block">
                                         <a
                                             href="https://www.youtube.com/watch?v=[TODO]"
                                             class="external-link button is-normal is-rounded is-dark"
@@ -160,7 +160,7 @@
                                             </span>
                                             <span>Video</span>
                                         </a>
-                                    </span>
+                                    </span> -->
                                     <!-- Code Link. -->
                                     <span class="link-block">
                                         <a
@@ -338,7 +338,7 @@
                                 agent transitions by generating the next state, given the current
                                 state. Then, we reformulate the learning objective to train the
                                 diffusion model as a binary classifier and use it to provide
-                                ``realness'' rewards for policy learning. Our proposed framework,
+                                ''realness'' rewards for policy learning. Our proposed framework,
                                 Diffusion Imitation from Observation (DIFO), demonstrates superior
                                 performance in various continuous control domains, including
                                 navigation, locomotion, manipulation, and games.
@@ -357,7 +357,7 @@
                 <div class="columns is-centered">
                     <div class="column is-full-width">
                         <div class="content has-text-justified">
-                            <h2 class="title is-3">Framework Overview</h2>
+                            <h2 class="title is-3">DIFO Overview</h2>
                         </div>
                         <div class="content has-text-centered">
                             <img src="./static/images/approach/framework.png" alt="DIFO model framework" width="75%">
@@ -396,19 +396,35 @@
                             <img src="./static/images/experiment/env.png" alt="Environment Description" width="75%">
                         </div>
                         <div class="content has-text-justified">
-                            <p>(a) <strong><span class="smallcaps">PointMaze:</span></strong> A navigation task for a 2-DoF agent in a medium maze. The agent is trained to navigate from an initial position to a randomly sampled goal, observing its position, velocity, and goal position. The agent applies linear forces in the x and y directions to navigate the maze.</p>  
-                            <p>(b) <strong><span class="smallcaps">AntMaze:</span></strong> A locomotion and navigation task where a quadruped ant navigates from an initial position to a randomly sampled goal by controlling the torque of its legs. The environment features a high-dimensional 29-dimension state space.</p>
-                            <p>(c) <strong><span class="smallcaps">FetchPush:</span></strong> A 7-DoF Fetch robot arm is tasked with pushing a block to a randomly sampled target position on a table. The robot is controlled by small displacements of the gripper in XYZ coordinates, with a 28-dimension state space and a 4-dimension action space.</p>
-                            <p>(d) <strong><span class="smallcaps">AdroitDoor:</span></strong> A manipulation task to undo a latch and swing open a randomly placed door. The task is based on the Adroit manipulation platform and features a 39-dimension state space and 28-dimension action space for controlling joints.</p>
-                            <p>(e) <strong><span class="smallcaps">Walker:</span></strong> A locomotion task involving a 6-DoF Walker2D in MuJoCo. The goal is to walk forward by applying torques to the six hinges, with initial joint states perturbed by uniform noise.</p>
-                            <p>(f) <strong><span class="smallcaps">OpenMicrowave:</span></strong> A manipulation task controlling a 9-DoF Franka robot arm to open a microwave door. The task involves a 59-dimension state space and a 9-dimension continuous action space to control the angular velocity of each joint.</p>
-                            <p>(g) <strong><span class="smallcaps">CarRacing:</span></strong> An image-based control task where a car completes randomly generated tracks as quickly as possible. The car has continuous action space to control the throttle, steering, and braking.</p>
-                            <p>(h) <strong><span class="smallcaps">CloseDrawer:</span></strong> An image-based manipulation task controlling a Sawyer robot arm to close a drawer. The robot is controlled in XYZ coordinates, with initial poses of both the robot and the drawer randomized in each episode.</p>
+                            <p>We experiment in various continuous control domains, including navigation, locomotion, manipulation, and games.</p>
+                            <p>(a) <strong><span class="smallcaps">PointMaze:</span></strong> A navigation task for a 2-DoF agent in a medium maze. The agent is trained to navigate from an initial position to a randomly sampled goal, observing its position, velocity, and goal position.
+                                <!-- The agent applies linear forces in the x and y directions to navigate the maze. -->
+                            </p>
+                            <p>(b) <strong><span class="smallcaps">AntMaze:</span></strong> A locomotion and navigation task where a quadruped ant navigates from an initial position to a randomly sampled goal by controlling the torque of its legs.
+                                 <!-- The environment features a high-dimensional 29-dimension state space. -->
+                            </p>
+                            <p>(c) <strong><span class="smallcaps">FetchPush:</span></strong> A 7-DoF Fetch robot arm is tasked with pushing a block to a randomly sampled target position on a table.
+                                 <!-- The robot is controlled by small displacements of the gripper in XYZ coordinates, with a 28-dimension state space and a 4-dimension action space. -->
+                            </p>
+                            <p>(d) <strong><span class="smallcaps">AdroitDoor:</span></strong> A manipulation task to undo a latch and swing open a randomly placed door.
+                                 <!-- The task is based on the Adroit manipulation platform and features a 39-dimension state space and 28-dimension action space for controlling joints. -->
+                            </p>
+                            <p>(e) <strong><span class="smallcaps">Walker:</span></strong> A locomotion task involving a 6-DoF Walker2D in MuJoCo.
+                                 <!-- The goal is to walk forward by applying torques to the six hinges, with initial joint states perturbed by uniform noise. -->
+                            </p>
+                            <p>(f) <strong><span class="smallcaps">OpenMicrowave:</span></strong> A manipulation task controlling a 9-DoF Franka robot arm to open a microwave door.
+                                 <!-- The task involves a 59-dimension state space and a 9-dimension continuous action space to control the angular velocity of each joint. -->
+                            </p>
+                            <p>(g) <strong><span class="smallcaps">CarRacing:</span></strong> An image-based control task where a car completes randomly generated tracks as quickly as possible.
+                                 <!-- The car has continuous action space to control the throttle, steering, and braking. -->
+                            </p>
+                            <p>(h) <strong><span class="smallcaps">CloseDrawer:</span></strong> An image-based manipulation task controlling a Sawyer robot arm to close a drawer.
+                                 <!-- The robot is controlled in XYZ coordinates, with initial poses of both the robot and the drawer randomized in each episode. -->
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- (PointMaze|AntMaze|FetchPush|AdroitDoor|OpenMicrowave|CloseDrawer|Walker|CarRacing) -->
         </section>
         <!--/ Environment. -->
 
@@ -426,8 +442,20 @@
                         </div>
                         <div class="content has-text-justified">
                             <p>
-                                We evaluate all the methods with five random seeds and report their success rates in <strong><span class="smallcaps">PointMaze</span></strong>, <strong><span class="smallcaps">AntMaze</span></strong>, <strong><span class="smallcaps">FetchPush</span></strong>, <strong><span class="smallcaps">AdroitDoor</span></strong>, <strong><span class="smallcaps">OpenMicrowave</span></strong>, and <strong><span class="smallcaps">CloseDrawer</span></strong>, and their returns in <strong><span class="smallcaps">Walker</span></strong>, and <strong><span class="smallcaps">CarRacing</span></strong>. The standard deviation is shown as the shaded area. Our proposed method, DIFO, demonstrates more stable and faster learning performance compared to the baselines.
+                                Our proposed method, DIFO, consistently outperforms or matches the best-performing baselines across various tasks, demonstrating the effectiveness of integrating a conditional diffusion model into the AIL framework. In environments like <strong><span class="smallcaps">AntMaze</span></strong>, <strong><span class="smallcaps">AdroitDoor</span></strong>, and <strong><span class="smallcaps">CarRacing</span></strong>, DIFO converges faster, modeling expert behavior efficiently in high-dimensional spaces while providing stable training results with low variance. Compared to behavior cloning (BC), which struggles due to its reliance on expert datasets and covariate shifts, DIFO benefits from online interactions to generate transition-level rewards. Unlike Optimal Transport (OT), which struggles with diverse trajectories, DIFO excels by identifying transition similarities.
                             </p>
+                            <p>
+                                Variants like DIFO-Uncond and DIFO-NA perform poorly, except in limited cases like <strong><span class="smallcaps">CloseDrawer</span></strong>, emphasizing the necessity of agent-environment interactions to avoid policy exploitation and instability. We evaluated all methods on multiple tasks, showing that DIFO delivers more stable and faster learning across the board.
+                            </p>
+                            <!-- <p>
+                                Our proposed method DIFO consistently outperforms or matches the performance of the best-performing baseline in all the tasks, highlighting the effectiveness of integrating a conditional diffusion model into the AIL framework. In ANTMAZE, ADROITDOOR, and CARRACING, DIFO outperforms the baselines and converges significantly faster, indicating its efficiency in modeling expert behavior and providing effective rewards even in high-dimensional state and action spaces. Moreover, DIFO presents more stable training results, with relatively low variance compared to other AIL methods. Notably, although BC has access to action labels, it still fails in most tasks with more randomness. This is because BC relies solely on learning from the observed expert dataset, unlike the LfO methods that utilize online interaction with environments, BC is susceptible to covariate shifts [41, 63, 64] and requires a substantial amount of expert data to achieve coverage of the dataset. The result indicates the significance of online interactions. OT only successfully learns in environments like ADROITDOOR, WALKER, and CLOSEDRAWER, where trajectory variety is limited. OT computes distances at the trajectory level rather than the transition level, which requires monotonic trajectories, making it struggle in tasks with diverse trajectories. In contrast, our method generates rewards at the transition level, allowing us to identify transition similarities even when facing substantial trajectory variability.                                
+                            </p>
+                            <p>
+                                Variants of DIFO, i.e., DIFO-Uncond, and DIFO-NA, perform poorly in most tasks. DIFO-NA learns poorly in most of the tasks except CLOSEDRAWER, underscoring diffusion loss could be a reasonable metric for the discriminator while it is still necessary to model agent online interaction data to prevent the diffusion model from being exploited by the policy. On the other hand, DIFO-Uncond performs comparably to other AIL baselines but shows instability across different tasks, this highlighting the importance of modeling transitions using a diffusion model. 
+                            </p>
+                            <p>
+                                We evaluate all the methods with five random seeds and report their success rates in <strong><span class="smallcaps">PointMaze</span></strong>, <strong><span class="smallcaps">AntMaze</span></strong>, <strong><span class="smallcaps">FetchPush</span></strong>, <strong><span class="smallcaps">AdroitDoor</span></strong>, <strong><span class="smallcaps">OpenMicrowave</span></strong>, and <strong><span class="smallcaps">CloseDrawer</span></strong>, and their returns in <strong><span class="smallcaps">Walker</span></strong>, and <strong><span class="smallcaps">CarRacing</span></strong>. The standard deviation is shown as the shaded area. Our proposed method, DIFO, demonstrates more stable and faster learning performance compared to the baselines.
+                            </p> -->
                         </div>
                     </div>
                 </div>
@@ -472,10 +500,10 @@
                         </div>
                         <div class="content has-text-justified">
                             <p>
-                                To investigate whether the DIFO diffusion model can closely capture the expert distribution, we generate trajectories with the diffusion model in <strong><span class="smallcaps">PointMaze</span></strong>. Specifically, we take a trained diffusion discriminator of DIFO and autoregressively generate a sequence of next states starting from an initial state sampled in the expert dataset. We visualize four pairs of expert trajectories and the corresponding generated trajectories in Figure 5.
+                                We take a trained diffusion discriminator of DIFO and autoregressively generate a sequence of next states starting from an initial state sampled in the expert dataset. We visualize four pairs of expert trajectories and the corresponding generated trajectories above.
                             </p>
                             <p>
-                                The results show that our diffusion model can accurately gen- erate trajectories similar to those of the expert. It is worth noting that the diffusion model can generate trajectories that differ from the expert trajectories while still completing the task, such as the example on the bottom right of Figure 5, where the diffusion model produces even shorter trajectories than the scripted expert policy. Additional expert trajectories and the corresponding generated trajectories are presented in Appendix E.
+                                The results show that our diffusion model can accurately generate trajectories similar to those of the expert. It is worth noting that the diffusion model can generate trajectories that differ from the expert trajectories while still completing the task, such as the example on the bottom right of the Figure, where the diffusion model produces even shorter trajectories than the scripted expert policy.
                             </p>
                         </div>
                     </div>
@@ -498,7 +526,10 @@
                         </div>
                         <div class="content has-text-justified">
                             <p>
-                                Reward function visualization and generated distribution on SINE. (a) The expert state transition distribution. (b) The state transition distribution generated by the DIFO diffusion model. (c-d) The visualized reward functions learned by GAIfO and DIFO, respectively. DIFO produces smoother rewards outside of the expert distribution, allowing for facilitating policy learning.
+                                Reward function visualization and generated distribution on SINE.
+                                <strong>(a)</strong> The expert state transition distribution.
+                                <strong>(b)</strong> The state transition distribution generated by the DIFO diffusion model.
+                                <strong>(c-d)</strong> The visualized reward functions learned by GAIfO and DIFO, respectively. DIFO produces smoother rewards outside of the expert distribution, allowing for facilitating policy learning.
                             </p>
                         </div>
                     </div>
@@ -515,7 +546,7 @@
         <!-- Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\) -->
                     <div class="column">
                         <div class="content has-text-justified">
-                            <h2 class="title is-3">\(\lambda_{MSE}\) and \(\lambda_{BCE}\)</h2>
+                            <h2 class="title is-5">\(\lambda_{MSE}\) and \(\lambda_{BCE}\)</h2>
                         </div>
                         <div class="content has-text-centered">
                             <img src="./static/images/experiment/mse_ratio.png" alt="Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\)" width="90%">
@@ -530,14 +561,14 @@
             <!-- Ablation study on the number of samples for reward computation -->
                     <div class="column">
                         <div class="content has-text-justified">
-                            <h2 class="title is-3">Number of samples</h2>
+                            <h2 class="title is-5">Number of samples for reward computation</h2>
                         </div>
                         <div class="content has-text-centered">
                             <img src="./static/images/experiment/sample.png" alt="Ablation study on the number of samples for reward computation" width="90%">
                         </div>
                         <div class="content has-text-justified">
                             <p>
-                                To investigate the robustness of our rewards, we conducted experiments with varying numbers of denoising step samples in <strong><span class="smallcaps">PointMaze</span></strong> and <strong><span class="smallcaps">Walker</span></strong>. We take the mean of losses computed from different numbers of samples, i.e., multiple t, to compute rewards. As presented in the Figure 8, the performance of DIFO is stable under different numbers of samples. As a result, we use a single denoising step sample to compute the reward for the best efficiency. We also investigate the stability of rewards under different numbers of samples in Appendix F.
+                                To investigate the robustness of our rewards, we conducted experiments with varying numbers of denoising step samples in <strong><span class="smallcaps">PointMaze</span></strong> and <strong><span class="smallcaps">Walker</span></strong>. We take the mean of losses computed from different numbers of samples, i.e., multiple t, to compute rewards. As presented in the Figure above, the performance of DIFO is stable under different numbers of samples. As a result, we use a single denoising step sample to compute the reward for the best efficiency.
                             </p>
                         </div>
                     </div>
