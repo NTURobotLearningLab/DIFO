@@ -1,0 +1,21 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: AntMaze-WAIfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - wail
+  - with
+  - waifo
+  - sac_il
+  - mlp_reward
+  - ant_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0

@@ -1,0 +1,15 @@
+logging:
+  wandb:
+    wandb_tag: OT
+    wandb_name_prefix: OT
+
+ot:
+  batch_size: 256
+  ot_kwargs:
+    reward_scale: 100
+    num_expert_samples: 10
+    lfo: true
+  rl_kwargs:
+    gamma: 0.99
+    learning_rate: 0.0003
+    gradient_steps: -1

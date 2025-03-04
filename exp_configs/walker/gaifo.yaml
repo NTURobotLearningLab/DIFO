@@ -1,0 +1,23 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: Walker-GAIfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - gail
+  - with
+  - gaifo
+  - sac_il
+  - mlp_reward
+  - walker
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    value: 0
+
+  algorithm_kwargs.disc_opt_kwargs.lr:
+    value: 0.00001

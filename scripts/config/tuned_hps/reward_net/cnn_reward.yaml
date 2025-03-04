@@ -1,0 +1,13 @@
+reward:
+  add_std_alpha: null
+  ensemble_size: null
+  net_cls: !!python/name:difo.difo.reward_nets.CnnRewardNet ""
+  net_kwargs:
+    mlp_kwargs:
+      hid_sizes:
+        - 256
+        - 256
+        - 256
+
+algorithm_kwargs:
+  demo_batch_size: 16

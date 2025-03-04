@@ -1,0 +1,24 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: AntMaze-DePO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - depo
+  - with
+  - depo
+  - sac_decoupled
+  - mlp_reward
+  - ant_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  rl.rl_kwargs.lambda_h:
+    value: 0.1

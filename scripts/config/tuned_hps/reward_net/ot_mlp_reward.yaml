@@ -1,0 +1,14 @@
+reward:
+  add_std_alpha: null
+  ensemble_size: null
+  net_cls: !!python/name:difo.baselines.ot.OTRewardNet ""
+  net_kwargs:
+    hid_sizes:
+      - 128
+      - 128
+      - 128
+      - 128
+      - 128
+    sinkhorn_rew_scale: 200.0
+    num_expert_samples: 1
+    emb_size: 32

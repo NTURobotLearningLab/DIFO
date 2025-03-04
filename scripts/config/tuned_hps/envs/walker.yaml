@@ -1,0 +1,21 @@
+environment:
+  gym_id: Walker2d-fixed-v4
+
+demonstrations:
+  source: local
+  path: datasets/walker.pkl
+  n_expert_demos: 1
+
+total_timesteps: 5_000_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    activation_fn: !!python/name:torch.nn.modules.activation.ReLU ""
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 512
+      - 512
+      - 512

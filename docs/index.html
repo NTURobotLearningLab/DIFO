@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Learning from observation (LfO) aims to imitate experts by learning from state-only demonstrations without requiring action labels. Existing adversarial imitation learning approaches learn a generator agent policy to produce state transitions that are indistinguishable to a discriminator that learns to classify agent and expert state transitions. Despite its simplicity in formulation, these methods are often sensitive to hyperparameters and brittle to train. Motivated by the recent success of diffusion models in generative modeling, we propose to integrate a diffusion model into the adversarial imitation learning from observation framework. Specifically, we employ a diffusion model to capture expert and agent transitions by generating the next state, given the current state. Then, we reformulate the learning objective to train the diffusion model as a binary classifier and use it to provide 'realness' rewards for policy learning. Our proposed framework, Diffusion Imitation from Observation (DIFO), demonstrates superior performance in various continuous control domains, including navigation, locomotion, manipulation, and games."
+    />
+    <meta
+      name="keywords"
+      content="Imitation from Observation, Learning from Observation, Imitation Learning, Diffusion Model, Reinforcement Learning, DIFO"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Diffusion Imitation from Observation</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+
+      gtag("config", "G-PYVRSFMDRL");
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css" />
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css" />
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css" />
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+    <link rel="stylesheet" href="./static/css/index.css" />
+    <link rel="icon" href="./static/images/NTU_RLL_logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+      integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+      integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+      integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+      crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"
+    ></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+  </head>
+  <body>
+    <!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                Diffusion Imitation from Observation
+              </h1>
+              <h3 class="title is-4 conference-authors">
+                <a target="_blank" href="https://neurips.cc/">NeurIPS 2024</a>
+              </h3>
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                  <a href="https://borueihuang.com">Bo-Ruei Huang</a>,
+                </span>
+                <span class="author-block">
+                  <a href="https://yck1130.github.io/">Chun-Kai Yang</a>,
+                </span>
+                <span class="author-block">
+                  <a href="https://www.mecoli.net/about">Chun-Mao Lai</a>,
+                </span>
+                <span class="author-block">
+                  <!-- Dai-Jie Wu, -->
+                  <a href="">Dai-Jie Wu</a>,
+                </span>
+                <span class="author-block">
+                  <a href="https://shaohua0116.github.io/">Shao-Hua Sun</a>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"> National Taiwan University </span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <!-- PDF Link. -->
+                  <span class="link-block">
+                    <a
+                      href="https://arxiv.org/pdf/2410.05429"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Paper</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a
+                      href="https://arxiv.org/abs/2410.05429"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="ai ai-arxiv"></i>
+                      </span>
+                      <span>arXiv</span>
+                    </a>
+                  </span>
+                  <!-- Code Link. -->
+                  <span class="link-block">
+                    <a
+                      href="https://github.com/NTURobotLearningLab/DIFO"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <section class="hero teaser">
+            <div class="container is-max-desktop">
+                <div class="hero-body">
+                    <video id="teaser" autoplay muted loop playsinline height="100%">
+                        <source src="./static/videos/teaser.mp4" type="video/mp4" />
+                    </video>
+                    <h2 class="subtitle has-text-centered">
+                        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+                        free-viewpoint portraits.
+                    </h2>
+                </div>
+            </div>
+        </section> -->
+    <!-- 
+        <section class="hero is-light is-small">
+            <div class="hero-body">
+                <div class="container">
+                    <div id="results-carousel" class="carousel results-carousel">
+                        <div class="item item-steve">
+                            <video
+                                poster=""
+                                id="steve"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/steve.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-chair-tp">
+                            <video
+                                poster=""
+                                id="chair-tp"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/chair-tp.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-shiba">
+                            <video
+                                poster=""
+                                id="shiba"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/shiba.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-fullbody">
+                            <video
+                                poster=""
+                                id="fullbody"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/fullbody.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-blueshirt">
+                            <video
+                                poster=""
+                                id="blueshirt"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/blueshirt.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-mask">
+                            <video
+                                poster=""
+                                id="mask"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/mask.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-coffee">
+                            <video
+                                poster=""
+                                id="coffee"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/coffee.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                        <div class="item item-toby">
+                            <video
+                                poster=""
+                                id="toby"
+                                autoplay
+                                controls
+                                muted
+                                loop
+                                playsinline
+                                height="100%"
+                            >
+                                <source src="./static/videos/toby2.mp4" type="video/mp4" />
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+    <section class="section" style="padding-top: 0">
+      <div class="container is-max-desktop">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                Learning from observation (LfO) aims to imitate experts by
+                learning from state-only demonstrations without requiring action
+                labels. Existing adversarial imitation learning approaches learn
+                a generator agent policy to produce state transitions that are
+                indistinguishable to a discriminator that learns to classify
+                agent and expert state transitions. Despite its simplicity in
+                formulation, these methods are often sensitive to
+                hyperparameters and brittle to train. Motivated by the recent
+                success of diffusion models in generative modeling, we propose
+                to integrate a diffusion model into the adversarial imitation
+                learning from observation framework. Specifically, we employ a
+                diffusion model to capture expert and agent transitions by
+                generating the next state, given the current state. Then, we
+                reformulate the learning objective to train the diffusion model
+                as a binary classifier and use it to provide ''realness''
+                rewards for policy learning. Our proposed framework, Diffusion
+                Imitation from Observation (DIFO), demonstrates superior
+                performance in various continuous control domains, including
+                navigation, locomotion, manipulation, and games.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!--/ Abstract. -->
+      </div>
+    </section>
+
+    <section class="section">
+      <!-- Framework Overview -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">Framework Overview</h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/approach/framework.png"
+                  alt="DIFO model framework"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  We propose Diffusion Imitation from Observation (DIFO), a
+                  novel adversarial imitation learning from observation
+                  framework employing a conditional diffusion model.
+                  <strong> (a) Learning diffusion discriminator. </strong>
+                  In the <i>discriminator step</i> the diffusion model learns to
+                  model a state transition (\(\mathbf{s}, \mathbf{s}'\)) by
+                  conditioning on the current state \(\mathbf{s}\) and generates
+                  the next state \(\mathbf{s}'\). With the additional condition
+                  on binary expert and agent labels (\(c_E/c_A\)), we construct
+                  the diffusion discriminator to distinguish expert and agent
+                  transitions by leveraging the single-step denoising loss as a
+                  likelihood approximation.
+                  <strong> (b) Learning policy with diffusion reward. </strong>
+                  In the <i>policy step</i>, we optimize the policy with
+                  reinforcement learning according to rewards calculated based
+                  on the diffusion discriminator's output \(\log(1 -
+                  \mathcal{D}_{\phi}(\mathbf{s},\mathbf{s'}))\).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Framework Overview. -->
+
+    <section class="section">
+      <!-- Environment -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">Environment</h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/env.png"
+                  alt="Environment Description"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  We experiment in various continuous control domains, including
+                  navigation, locomotion, manipulation, and games.
+                </p>
+                <p>
+                  (a)
+                  <strong><span class="smallcaps">PointMaze:</span></strong> A
+                  navigation task for a 2-DoF agent in a medium maze.
+                  <!-- The agent is trained to navigate from an initial position to a randomly sampled goal, observing its position, velocity, and goal position. -->
+                  <!-- The agent applies linear forces in the x and y directions to navigate the maze. -->
+                </p>
+                <p>
+                  (b) <strong><span class="smallcaps">AntMaze:</span></strong> A
+                  locomotion and navigation task where a quadruped ant navigates
+                  from an initial position to a randomly sampled goal by
+                  controlling the torque of its legs.
+                  <!-- The environment features a high-dimensional 29-dimension state space. -->
+                </p>
+                <p>
+                  (c)
+                  <strong><span class="smallcaps">FetchPush:</span></strong> A
+                  7-DoF Fetch robot arm is tasked with pushing a block to a
+                  randomly sampled target position on a table.
+                  <!-- The robot is controlled by small displacements of the gripper in XYZ coordinates, with a 28-dimension state space and a 4-dimension action space. -->
+                </p>
+                <p>
+                  (d)
+                  <strong><span class="smallcaps">AdroitDoor:</span></strong> A
+                  manipulation task to undo a latch and swing open a randomly
+                  placed door.
+                  <!-- The task is based on the Adroit manipulation platform and features a 39-dimension state space and 28-dimension action space for controlling joints. -->
+                </p>
+                <p>
+                  (e) <strong><span class="smallcaps">Walker:</span></strong> A
+                  locomotion task involving a 6-DoF Walker2D in MuJoCo.
+                  <!-- The goal is to walk forward by applying torques to the six hinges, with initial joint states perturbed by uniform noise. -->
+                </p>
+                <p>
+                  (f)
+                  <strong><span class="smallcaps">OpenMicrowave:</span></strong>
+                  A manipulation task controlling a 9-DoF Franka robot arm to
+                  open a microwave door.
+                  <!-- The task involves a 59-dimension state space and a 9-dimension continuous action space to control the angular velocity of each joint. -->
+                </p>
+                <p>
+                  (g)
+                  <strong><span class="smallcaps">CarRacing:</span></strong> An
+                  image-based control task where a car completes randomly
+                  generated tracks as quickly as possible.
+                  <!-- The car has continuous action space to control the throttle, steering, and braking. -->
+                </p>
+                <p>
+                  (h)
+                  <strong><span class="smallcaps">CloseDrawer:</span></strong>
+                  An image-based manipulation task controlling a Sawyer robot
+                  arm to close a drawer.
+                  <!-- The robot is controlled in XYZ coordinates, with initial poses of both the robot and the drawer randomized in each episode. -->
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Environment. -->
+
+    <section class="section">
+      <!-- Learning performance and efficiency -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">Learning performance and efficiency</h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/main_results.png"
+                  alt="Learning performance and efficiency"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  Our proposed method, DIFO, consistently outperforms or matches
+                  the best-performing baselines across various tasks,
+                  demonstrating the effectiveness of integrating a conditional
+                  diffusion model into the AIL framework. In environments like
+                  <strong><span class="smallcaps">AntMaze</span></strong
+                  >, <strong><span class="smallcaps">AdroitDoor</span></strong
+                  >, and
+                  <strong><span class="smallcaps">CarRacing</span></strong
+                  >, DIFO converges faster, modeling expert behavior efficiently
+                  in high-dimensional spaces while providing stable training
+                  results with low variance. Compared to behavior cloning (BC),
+                  which struggles due to its reliance on expert datasets and
+                  covariate shifts, DIFO benefits from online interactions to
+                  generate transition-level rewards. Unlike Optimal Transport
+                  (OT), which struggles with diverse trajectories, DIFO excels
+                  by identifying transition similarities.
+                </p>
+                <p>
+                  Variants like DIFO-Uncond and DIFO-NA perform poorly, except
+                  in limited cases like
+                  <strong><span class="smallcaps">CloseDrawer</span></strong
+                  >, emphasizing the necessity of agent-environment interactions
+                  to avoid policy exploitation and instability. We evaluated all
+                  methods on multiple tasks, showing that DIFO delivers more
+                  stable and faster learning across the board.
+                </p>
+                <!-- <p>
+                                Our proposed method DIFO consistently outperforms or matches the performance of the best-performing baseline in all the tasks, highlighting the effectiveness of integrating a conditional diffusion model into the AIL framework. In ANTMAZE, ADROITDOOR, and CARRACING, DIFO outperforms the baselines and converges significantly faster, indicating its efficiency in modeling expert behavior and providing effective rewards even in high-dimensional state and action spaces. Moreover, DIFO presents more stable training results, with relatively low variance compared to other AIL methods. Notably, although BC has access to action labels, it still fails in most tasks with more randomness. This is because BC relies solely on learning from the observed expert dataset, unlike the LfO methods that utilize online interaction with environments, BC is susceptible to covariate shifts [41, 63, 64] and requires a substantial amount of expert data to achieve coverage of the dataset. The result indicates the significance of online interactions. OT only successfully learns in environments like ADROITDOOR, WALKER, and CLOSEDRAWER, where trajectory variety is limited. OT computes distances at the trajectory level rather than the transition level, which requires monotonic trajectories, making it struggle in tasks with diverse trajectories. In contrast, our method generates rewards at the transition level, allowing us to identify transition similarities even when facing substantial trajectory variability.                                
+                            </p>
+                            <p>
+                                Variants of DIFO, i.e., DIFO-Uncond, and DIFO-NA, perform poorly in most tasks. DIFO-NA learns poorly in most of the tasks except CLOSEDRAWER, underscoring diffusion loss could be a reasonable metric for the discriminator while it is still necessary to model agent online interaction data to prevent the diffusion model from being exploited by the policy. On the other hand, DIFO-Uncond performs comparably to other AIL baselines but shows instability across different tasks, this highlighting the importance of modeling transitions using a diffusion model. 
+                            </p>
+                            <p>
+                                We evaluate all the methods with five random seeds and report their success rates in <strong><span class="smallcaps">PointMaze</span></strong>, <strong><span class="smallcaps">AntMaze</span></strong>, <strong><span class="smallcaps">FetchPush</span></strong>, <strong><span class="smallcaps">AdroitDoor</span></strong>, <strong><span class="smallcaps">OpenMicrowave</span></strong>, and <strong><span class="smallcaps">CloseDrawer</span></strong>, and their returns in <strong><span class="smallcaps">Walker</span></strong>, and <strong><span class="smallcaps">CarRacing</span></strong>. The standard deviation is shown as the shaded area. Our proposed method, DIFO, demonstrates more stable and faster learning performance compared to the baselines.
+                            </p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Learning performance and efficiency. -->
+
+    <section class="section">
+      <!-- Data efficiency -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">Data efficiency</h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/efficiency.png"
+                  alt="Data efficiency"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  We vary the amount of available expert demonstrations in
+                  <strong><span class="smallcaps">AntMaze</span></strong
+                  >. Our proposed method DIFO consistently outperforms other
+                  methods when the number of expert demonstrations decreases,
+                  highlighting the data efficiency of DIFO.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Data efficiency. -->
+
+    <section class="section">
+      <!-- Generating data using diffusion models -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">
+                  Generating data using diffusion models
+                </h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/maze.png"
+                  alt="Generating data using diffusion models"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  We take a trained diffusion discriminator of DIFO and
+                  autoregressively generate a sequence of next states starting
+                  from an initial state sampled in the expert dataset. We
+                  visualize four pairs of expert trajectories and the
+                  corresponding generated trajectories above.
+                </p>
+                <p>
+                  The results show that our diffusion model can accurately
+                  generate trajectories similar to those of the expert. It is
+                  worth noting that the diffusion model can generate
+                  trajectories that differ from the expert trajectories while
+                  still completing the task, such as the example on the bottom
+                  right of the Figure, where the diffusion model produces even
+                  shorter trajectories than the scripted expert policy.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Generating data using diffusion models. -->
+
+    <section class="section">
+      <!-- Visualized learned reward functions -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-3">Visualized learned reward functions</h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/sine.png"
+                  alt="Visualized learned reward functions"
+                  width="75%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  Reward function visualization and generated distribution on
+                  SINE.
+                  <strong>(a)</strong> The expert state transition distribution.
+                  <strong>(b)</strong> The state transition distribution
+                  generated by the DIFO diffusion model.
+                  <strong>(c-d)</strong> The visualized reward functions learned
+                  by GAIfO and DIFO, respectively. DIFO produces smoother
+                  rewards outside of the expert distribution, allowing for
+                  facilitating policy learning.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="content has-text-justified">
+          <h2 class="title is-3">Ablation study</h2>
+        </div>
+        <div class="is-centered">
+          <!-- Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\) -->
+          <div class="columns is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-5">
+                  \(\lambda_{MSE}\) and \(\lambda_{BCE}\)
+                </h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/mse_ratio.png"
+                  alt="Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\)"
+                  width="45%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  We hypothesize that both \(\lambda_{MSE}\) and
+                  \(\lambda_{BCE}\) are important for efficiency learning. To
+                  examine the effect of \(\lambda_{MSE}\) and \(\lambda_{BCE}\)
+                  and verify the hypothesis, we vary the ratio of
+                  \(\lambda_{MSE}\) and \(\lambda_{BCE}\) in
+                  <strong><span class="smallcaps">PointMaze</span></strong> and
+                  <strong><span class="smallcaps">Walker</span></strong
+                  >, including \(\lambda_{BCE}\) only and \(\lambda_{MSE}\)
+                  only, i.e., \(\lambda_{MSE}\) = 0 and \(\lambda_{BCE}\) = 0.
+                  As shown in Figure 7, the results emphasize the significance
+                  of introducing both \(\lambda_{MSE}\) and \(\lambda_{BCE}\),
+                  since they enable the model to simultaneously model expert
+                  behavior (\(\lambda_{MSE}\)) and perform binary classification
+                  (\(\lambda_{BCE}\)). Without \(\lambda_{MSE}\), the
+                  performance slightly decreases as it does not modeling expert
+                  behaviors. Without \(\lambda_{BCE}\), the model fails to learn
+                  as it does not utilize negative samples, i.e., agent data.
+                  Moreover, when we vary the ratio of \(\lambda_{MSE}\) and
+                  \(\lambda_{BCE}\), DIFO maintains stable performance,
+                  demonstrating DIFO is relatively insensitive to hyperparameter
+                  variations.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!--/ Ablation study on \(\lambda_{MSE}\) and \(\lambda_{BCE}\). -->
+          <!-- Ablation study on the number of samples for reward computation -->
+          <div class="is-centered">
+            <div class="column is-full-width">
+              <div class="content has-text-justified">
+                <h2 class="title is-5">
+                  Number of samples for reward computation
+                </h2>
+              </div>
+              <div class="content has-text-centered">
+                <img
+                  src="./static/images/experiment/sample.png"
+                  alt="Ablation study on the number of samples for reward computation"
+                  width="45%"
+                />
+              </div>
+              <div class="content has-text-justified">
+                <p>
+                  To investigate the robustness of our rewards, we conducted
+                  experiments with varying numbers of denoising step samples in
+                  <strong><span class="smallcaps">PointMaze</span></strong> and
+                  <strong><span class="smallcaps">Walker</span></strong
+                  >. We take the mean of losses computed from different numbers
+                  of samples, i.e., multiple t, to compute rewards. As presented
+                  in the Figure above, the performance of DIFO is stable under
+                  different numbers of samples. As a result, we use a single
+                  denoising step sample to compute the reward for the best
+                  efficiency.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--/ Ablation study on the number of samples for reward computation. -->
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <h2 class="title">BibTeX</h2>
+        <pre><code>@inproceeding{huang2024DIFO,
+  author    = {Huang, Bo-Ruei and Yang, Chun-Kai and Lai, Chun-Mao and Wu, Dai-Jie and Sun, Shao-Hua},
+  title     = {Diffusion Imitation from Observation},
+  booktitle   = {38th Conference on Neural Information Processing Systems (NeurIPS 2024)},
+  year      = {2024},
+}</code></pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <a class="icon-link" href="https://arxiv.org/pdf/2410.05429">
+            <i class="fas fa-file-pdf"></i>
+          </a>
+          <a class="icon-link" href="[TODO]" class="external-link" disabled>
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-8">
+            <div class="content">
+              <p>
+                This website template is borrowed from
+                <a rel="Nerfies" href="https://nerfies.github.io/"> Nerfies</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+environment:
+  gym_id: PointMaze_MediumDense-v3
+  env_wrappers:
+    - cls: !!python/name:envs.wrappers.DictToVecWrapper ""
+      kwargs: {}
+
+demonstrations:
+  source: local
+  path: datasets/point_maze.pkl
+  n_expert_demos: 60
+
+total_timesteps: 1_000_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    activation_fn: !!python/name:torch.nn.modules.activation.ReLU ""
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 256
+      - 256
+      - 256

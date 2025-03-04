@@ -1,0 +1,21 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: PointMaze-AIRLfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - airl
+  - with
+  - airlfo
+  - sac_il
+  - mlp_reward
+  - point_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0

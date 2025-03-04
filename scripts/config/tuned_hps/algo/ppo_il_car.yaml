@@ -1,0 +1,18 @@
+rl:
+  batch_size: 8192
+  rl_cls: !!python/name:stable_baselines3.PPO ""
+  rl_kwargs:
+    batch_size: 128
+    clip_range: 0.2
+    ent_coef: 0
+    gae_lambda: 0.95
+    gamma: 0.99
+    learning_rate: 0.0001
+    max_grad_norm: 0.6
+    n_epochs: 10
+    vf_coef: 0.5
+
+algorithm_kwargs:
+  disc_gen_ratio: 0.0625
+  n_combined_batch: 1
+  gen_replay_buffer_capacity: 8192

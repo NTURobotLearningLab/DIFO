@@ -1,0 +1,17 @@
+reward:
+  net_cls: !!python/name:difo.difo.diffusion_nets.UNet1DRewardNet ""
+  net_kwargs:
+    normalize_input_layer: !!python/name:imitation.util.networks.MinMaxNorm ""
+    diffusion_net_kwargs:
+      num_units:
+        - 256
+        - 256
+        - 256
+    sample_strategy: random
+    sample_strategy_kwargs:
+      low: 250
+      high: 750
+    scheduler_cls: !!python/name:diffusers.DDPMScheduler ""
+    scheduler_kwargs:
+      num_train_timesteps: 1000
+      beta_schedule: squaredcos_cap_v2

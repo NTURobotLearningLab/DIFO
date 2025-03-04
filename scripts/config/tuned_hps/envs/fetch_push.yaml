@@ -1,0 +1,23 @@
+environment:
+  gym_id: FetchPushDense-v2
+  env_wrappers:
+    - cls: !!python/name:envs.wrappers.DictToVecWrapper ""
+      kwargs: {}
+
+demonstrations:
+  source: local
+  path: datasets/fetch_push.pkl
+  n_expert_demos: 50
+
+total_timesteps: 1_500_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 256
+      - 256
+      - 256

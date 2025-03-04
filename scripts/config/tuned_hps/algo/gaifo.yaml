@@ -1,0 +1,21 @@
+logging:
+  wandb:
+    wandb_tag: GAIfO
+    wandb_name_prefix: GAIfO
+
+algorithm_kwargs:
+  demo_batch_size: 64
+  gen_replay_buffer_capacity: 1_000_000
+  processed_reward_cls: GAIL
+  allow_variable_horizon: true
+  disc_opt_kwargs:
+    lr: 0.0001
+    weight_decay: 0
+
+# LfO
+reward:
+  net_kwargs:
+    use_state: true
+    use_action: false
+    use_next_state: true
+    use_done: false

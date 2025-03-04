@@ -1,0 +1,24 @@
+environment:
+  gym_id: FrankaKitchenCustom-v1
+  env_wrappers:
+    - cls: !!python/name:envs.wrappers.DictToVecWrapper ""
+      kwargs:
+        keys:
+          - observation
+
+demonstrations:
+  source: local
+  path: datasets/kitchen.pkl
+  n_expert_demos: 5
+
+total_timesteps: 5_000_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 128
+      - 128

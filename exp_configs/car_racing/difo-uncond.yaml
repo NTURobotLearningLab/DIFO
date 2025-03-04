@@ -1,0 +1,31 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: CarRacing-DIFO-Concat
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - difo
+  - with
+  - difo
+  - ppo_il_car
+  - cnn_diffusion_reward
+  - car_racing
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  algorithm_kwargs.n_combined_batch:
+    value: 1
+
+  algorithm_kwargs.bce_weight:
+    value: 1
+  algorithm_kwargs.mse_weight:
+    value: 0
+  algorithm_kwargs.logit_scale:
+    value: 1

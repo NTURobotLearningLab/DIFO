@@ -1,0 +1,23 @@
+logging:
+  wandb:
+    wandb_tag: IQ
+    wandb_name_prefix: IQ
+
+iq:
+  batch_size: 256
+  iq_kwargs:
+    lfo: true
+    div_method: null
+    loss_method: value
+    grad_pen: false
+    chi: false
+    regularize: true
+    use_target_value: true
+  rl_kwargs:
+    actor_learning_rate: !!float 3e-5
+    critic_learning_rate: !!float 3e-4
+    ent_coef: 0.01
+
+policy:
+  policy_kwargs:
+    n_critics: 1

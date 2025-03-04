@@ -1,0 +1,20 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: FetchPush-AIRLfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - airl
+  - with
+  - airlfo
+  - sac_il
+  - mlp_reward
+  - fetch_push
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    value: 0

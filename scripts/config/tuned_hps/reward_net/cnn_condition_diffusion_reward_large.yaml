@@ -1,0 +1,35 @@
+reward:
+  net_cls: !!python/name:difo.difo.diffusion_nets.UNet2DConditionRewardNet ""
+  net_kwargs:
+    diffusion_input_size: 64
+    diffusion_net_kwargs:
+      layers_per_block: 2
+      norm_num_groups: 4
+      encoder_hid_dim: 64
+      block_out_channels:
+        - 16
+        - 16
+        - 32
+        - 32
+      down_block_types:
+        - DownBlock2D
+        - DownBlock2D
+        - DownBlock2D
+        - DownBlock2D
+      mid_block_type: UNetMidBlock2D
+      up_block_types:
+        - UpBlock2D
+        - UpBlock2D
+        - UpBlock2D
+        - UpBlock2D
+    sample_strategy: random
+    sample_strategy_kwargs:
+      low: 250
+      high: 750
+    scheduler_cls: !!python/name:diffusers.DDPMScheduler ""
+    scheduler_kwargs:
+      num_train_timesteps: 1000
+      beta_schedule: squaredcos_cap_v2
+
+algorithm_kwargs:
+  demo_batch_size: 16

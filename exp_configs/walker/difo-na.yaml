@@ -1,0 +1,29 @@
+project: difo
+program: scripts.train_difo_na
+method: grid
+name: Walker-DIFO-NA
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - with
+  - sac_il
+  - 1d_condition_diffusion_reward
+  - walker
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  logging.wandb.wandb_tag:
+    value: DIFO-NA
+  logging.wandb.wandb_name_prefix:
+    value: DIFO-NA
+
+  reward.net_kwargs.emb_dim:
+    value: 256
+  reward.net_kwargs.diffusion_net_kwargs.num_units:
+    value: [512, 512, 512, 512]

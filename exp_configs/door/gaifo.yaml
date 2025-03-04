@@ -1,0 +1,27 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: Door-GAIfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - gail
+  - with
+  - gaifo
+  - ppo_il_door
+  - mlp_reward
+  - door
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  reward.net_kwargs.hid_sizes:
+    value: [128, 128, 128, 128]
+
+  algorithm_kwargs.disc_opt_kwargs.lr:
+    value: 0.00001

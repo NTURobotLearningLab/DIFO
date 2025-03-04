@@ -1,0 +1,20 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: CarRacing-WAIfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - wail
+  - with
+  - waifo
+  - ppo_il_car
+  - cnn_reward
+  - car_racing
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    value: 0

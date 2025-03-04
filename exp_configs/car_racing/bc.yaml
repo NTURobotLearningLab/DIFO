@@ -1,0 +1,22 @@
+project: difo
+program: scripts.train_imitation
+method: grid
+name: CarRacing-BC
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - bc
+  - with
+  - bc
+  - car_racing
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  bo.train_kwargs.log_rollouts_n_episodes:
+    value: 4

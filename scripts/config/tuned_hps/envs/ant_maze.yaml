@@ -1,0 +1,23 @@
+environment:
+  gym_id: AntMaze_UMazeDense-v4
+  env_wrappers:
+    - cls: !!python/name:envs.wrappers.DictToVecWrapper ""
+      kwargs: {}
+
+demonstrations:
+  source: local
+  path: datasets/ant_umaze.pkl
+  n_expert_demos: 100
+
+total_timesteps: 3_000_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 512
+      - 512
+      - 512

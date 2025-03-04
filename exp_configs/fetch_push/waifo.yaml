@@ -1,0 +1,20 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: FetchPush-WAIfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - wail
+  - with
+  - waifo
+  - sac_il
+  - mlp_reward
+  - fetch_push
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    value: 0

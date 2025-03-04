@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+conf=${1}
+if [ -z ${conf} ]; then
+    echo "Usage: $0 <config.yaml>"
+    exit 1
+fi
+
+# Initialize the sweep
+sweep_id=$(wandb sweep ${conf} 2>&1)
+
+# Extract the sweep id
+sweep=$(echo $sweep_id | sed "s/^.*wandb agent \(.*\)$/\1/")
+echo "Sweep ID: $sweep"
+
+# Run the sweep
+wandb agent ${sweep}

@@ -1,0 +1,22 @@
+project: difo
+program: scripts.train_imitation
+method: grid
+name: PointMaze-BC
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - bc
+  - with
+  - bc
+  - point_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  bc.train_kwargs.n_batches:
+    value: 100_000

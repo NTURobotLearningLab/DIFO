@@ -1,0 +1,19 @@
+logging:
+  wandb:
+    wandb_tag: BCO
+    wandb_name_prefix: BCO
+
+bco:
+  batch_size: 128
+  l2_weight: 0.001
+  ent_weight: 0.0001
+  inv_hidden_dim: 128
+  optimizer_cls: !!python/name:torch.optim.adam.Adam ""
+  optimizer_kwargs:
+    lr: 0.0003
+  train_kwargs:
+    bco_alpha: 1.0
+    bco_inv_steps: null
+    bc_n_batches: null
+    bc_n_epochs: null
+    log_rollouts_n_episodes: 10

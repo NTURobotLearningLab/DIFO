@@ -1,0 +1,19 @@
+environment:
+  gym_id: AdroitHandDoorCustomDense-v1
+
+demonstrations:
+  source: local
+  path: datasets/door.pkl
+  n_expert_demos: 50
+
+total_timesteps: 10_000_000
+
+policy:
+  policy_cls: MlpPolicy
+  policy_kwargs:
+    features_extractor_class: !!python/name:imitation.policies.base.NormalizeFeaturesExtractor ""
+    features_extractor_kwargs:
+      normalize_class: !!python/name:imitation.util.networks.RunningNorm ""
+    net_arch:
+      - 64
+      - 64

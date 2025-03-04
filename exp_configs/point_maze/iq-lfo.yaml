@@ -1,0 +1,22 @@
+project: difo
+program: scripts.train_imitation
+method: grid
+name: PointMaze-IQ-Learn-LfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - iq_learn
+  - with
+  - iq_learn
+  - point_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  iq.iq_kwargs.lfo:
+    value: true

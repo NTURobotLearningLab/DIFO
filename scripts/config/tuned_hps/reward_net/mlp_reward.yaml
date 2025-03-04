@@ -1,0 +1,12 @@
+reward:
+  add_std_alpha: null
+  ensemble_size: null
+  net_cls: !!python/name:imitation.rewards.reward_nets.BasicRewardNet ""
+  net_kwargs:
+    normalize_input_layer: !!python/name:imitation.util.networks.RunningNorm ""
+    hid_sizes:
+      - 128
+      - 128
+      - 128
+      - 128
+      - 128

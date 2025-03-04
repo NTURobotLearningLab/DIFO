@@ -1,0 +1,15 @@
+rl:
+  batch_size: 256
+  rl_cls: !!python/name:difo.baselines.SAC_IL ""
+  rl_kwargs:
+    gamma: 0.99
+    learning_rate: 0.0003
+
+algorithm_kwargs:
+  disc_gen_ratio: 1.0
+  n_combined_batch: 8
+
+  logger_dump_interval: 1
+  debug_use_ground_truth: true # Reward is calculated when buffer sampling
+
+checkpoint_interval: 1000

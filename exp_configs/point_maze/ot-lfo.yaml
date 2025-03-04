@@ -1,0 +1,21 @@
+project: difo
+program: scripts.train_imitation
+method: grid
+name: PointMaze-OT-LfO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - ot
+  - with
+  - ot
+  - point_maze
+  - ${args_no_hyphens}
+
+parameters:
+  seed:
+    value: 0
+
+  ot.ot_kwargs.lfo:
+    value: true

@@ -1,0 +1,25 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: CarRacing-DIFO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - difo
+  - with
+  - difo
+  - ppo_il_car
+  - cnn_condition_diffusion_reward_small
+  - car_racing
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  algorithm_kwargs.bce_weight:
+    value: 0.1
+

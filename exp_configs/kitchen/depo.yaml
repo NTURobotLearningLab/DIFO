@@ -1,0 +1,21 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: Kitchen-DePO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - depo
+  - with
+  - depo
+  - sac_decoupled
+  - mlp_reward
+  - kitchen
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0

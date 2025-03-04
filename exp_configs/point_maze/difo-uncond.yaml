@@ -1,0 +1,28 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: PointMaze-DIFO-Uncond
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - difo
+  - with
+  - difo
+  - sac_il
+  - 1d_diffusion_reward
+  - point_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  algorithm_kwargs.bce_weight:
+    value: 1
+  algorithm_kwargs.mse_weight:
+    value: 0
+  algorithm_kwargs.logit_scale:
+    value: 1

@@ -1,0 +1,23 @@
+environment:
+  gym_id: CarRacing-v2
+  env_wrappers:
+    - cls: !!python/name:envs.wrappers.frame_skip_wrapper.FrameSkip ""
+      kwargs:
+        skip: 2
+    - cls: !!python/name:gymnasium.wrappers.resize_observation.ResizeObservation ""
+      kwargs:
+        shape: 64
+    - cls: !!python/name:gymnasium.wrappers.gray_scale_observation.GrayScaleObservation ""
+      kwargs:
+        keep_dim: true
+  frame_stack: 2
+
+demonstrations:
+  source: local
+  path: datasets/car_racing.pkl
+  n_expert_demos: 1
+
+total_timesteps: 3_000_000
+
+policy:
+  policy_cls: CnnPolicy

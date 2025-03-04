@@ -1,0 +1,24 @@
+project: difo
+program: scripts.train_difo_na
+method: grid
+name: CarRacing-DIFO-NA
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - with
+  - ppo_il_car
+  - cnn_condition_diffusion_reward_large
+  - car_racing
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  logging.wandb.wandb_tag:
+    value: DIFO-NA
+  logging.wandb.wandb_name_prefix:
+    value: DIFO-NA

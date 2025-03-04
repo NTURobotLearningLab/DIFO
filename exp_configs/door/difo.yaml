@@ -1,0 +1,28 @@
+project: difo
+program: scripts.train_adversarial
+method: grid
+name: Door-DIFO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - difo
+  - with
+  - difo
+  - ppo_il_door
+  - 1d_condition_diffusion_reward
+  - door
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  algorithm_kwargs.bce_weight:
+    value: 0.01
+
+  reward.net_kwargs.emb_dim:
+    value: 128
+

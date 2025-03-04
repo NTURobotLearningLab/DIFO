@@ -1,0 +1,22 @@
+project: difo
+program: scripts.train_imitation
+method: grid
+name: AntMaze-BCO
+command:
+  - ${env}
+  - python3
+  - -m
+  - ${program}
+  - bco
+  - with
+  - bco
+  - ant_maze
+  - ${args_no_hyphens}
+  - --force
+
+parameters:
+  seed:
+    value: 0
+
+  bco.train_kwargs.bco_alpha:
+    value: 0.2

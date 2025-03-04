@@ -1,0 +1,20 @@
+logging:
+  wandb:
+    wandb_tag: Diffusion
+    wandb_name_prefix: Diffusion
+
+total_timesteps: 100_000
+checkpoint_interval: 5000
+demo_batch_size: 64
+log_interval: 100
+optimizer_kwargs:
+  lr: 0.0001
+  weight_decay: 0
+
+# LfO
+reward:
+  net_kwargs:
+    use_state: true
+    use_action: false
+    use_next_state: true
+    use_done: false
